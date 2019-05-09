@@ -35,3 +35,26 @@ func TestTimestampGreaterThan(t *testing.T) {
 	})
 }
 
+func TestCompareTimestamps(t *testing.T) {
+	testCases := []struct {
+		name     string
+		lhs, rhs primitive.Timestamp
+		expected int
+	}{
+		{"equal", primitive.Timestamp{5, 5}, primitive.Timestamp{5, 5}, 0},
+		{"lhs T greater", primitive.Timestamp{10, 5}, primitive.Timestamp{5, 5}, 1},
+		{"lhs I greater", primitive.Timestamp{5, 10}, primitive.Timestamp{5, 5}, 1},
+		{"lhs both greater", primitive.Timestamp{10, 10}, primitive.Timestamp{5, 5}, 1},
+		{"rhs T greater", primitive.Timestamp{5, 5}, primitive.Timestamp{10, 5}, -1},
+		{"rhs I greater", primitive.Timestamp{5, 5}, primitive.Timestamp{5, 10}, -1},
+		{"rhs both greater", primitive.Timestamp{5, 5}, primitive.Timestamp{10, 10}, -1},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			if res := CompareTimestamps(tc.lhs, tc.rhs); res != tc.expected {
+				t.Fatalf("result mismatch; expected %d, got %d", tc.expected, res)
+			}
+		})
+	}
+}
