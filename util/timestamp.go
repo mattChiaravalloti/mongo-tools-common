@@ -15,19 +15,7 @@ func TimestampGreaterThan(lhs, rhs primitive.Timestamp) bool {
 	return lhs.T > rhs.T || lhs.T == rhs.T && lhs.I > rhs.I
 }
 
-// CompareTimestamps returns a positive number if lhs > rhs, a negative number if lhs < rhs, and zero if lhs == rhs.
-func CompareTimestamps(lhs, rhs primitive.Timestamp) int {
-	if lhs.T > rhs.T {
-		return 1
-	}
-	if lhs.T < rhs.T {
-		return -1
-	}
-	if lhs.I > rhs.I {
-		return 1
-	}
-	if lhs.I < rhs.I {
-		return -1
-	}
-	return 0
+// TimestampLessThan returns true if lhs comes before rhs, false otherwise.
+func TimestampLessThan(lhs, rhs primitive.Timestamp) bool {
+	return lhs.T < rhs.T || lhs.T == rhs.T && lhs.I < rhs.I
 }
