@@ -23,7 +23,6 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	mopt "go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/writeconcern"
-	"go.mongodb.org/mongo-driver/x/network/connection"
 )
 
 type (
@@ -220,22 +219,22 @@ func configureClient(opts options.ToolOptions) (*mongo.Client, error) {
 			return nil, fmt.Errorf("CRL files are not supported on this platform")
 		}
 
-		tlsConfig := connection.NewTLSConfig()
+		tlsConfig := newTLSConfig()
 		if opts.SSLAllowInvalidCert || opts.SSLAllowInvalidHost {
-			tlsConfig.SetInsecure(true)
+			tlsConfig.setInsecure(true)
 		}
 		if opts.SSLPEMKeyFile != "" {
 			if opts.SSLPEMKeyPassword != "" {
-				tlsConfig.SetClientCertDecryptPassword(func() string { return opts.SSLPEMKeyPassword })
+				tlsConfig.setClientCertDecryptPassword(func() string { return opts.SSLPEMKeyPassword })
 			}
 
-			_, err := tlsConfig.AddClientCertFromFile(opts.SSLPEMKeyFile)
+			_, err := tlsConfig.addClientCertFromFile(opts.SSLPEMKeyFile)
 			if err != nil {
 				return nil, fmt.Errorf("error configuring client, can't load client certificate: %v", err)
 			}
 		}
 		if opts.SSLCAFile != "" {
-			if err := tlsConfig.AddCACertFromFile(opts.SSLCAFile); err != nil {
+			if err := tlsConfig.addCACertFromFile(opts.SSLCAFile); err != nil {
 				return nil, fmt.Errorf("error configuring client, can't load CA file: %v", err)
 			}
 		}
